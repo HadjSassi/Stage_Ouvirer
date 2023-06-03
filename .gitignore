@@ -5,3 +5,5 @@ backtest_tools-main
 database/quick_analysis
 database/node_modules
 node_modules
+package-lock.json
+package.json

@@ -1,7 +1,5 @@
-to install python
-to install jupyter
-to install pandas
-to install ccxt for python and for node js with npm install ccxt
-to install matplotlib
-to install ta
-to install csv-writer for node js with npm install csv-writer
+jupyter
+pandas
+ccxt
+matplotlib
+ta
