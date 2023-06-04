@@ -19,6 +19,8 @@ import ccxt
 from binance.client import Client
 import plotly
 import plotly.graph_objects as go
+import plotly.io as pio
+
 
 lowerCase = string.ascii_lowercase
 upperCase = string.ascii_uppercase
@@ -209,7 +211,7 @@ def plot_courbes2(df_tableau_multi):
                                  mode='lines',
                                  name=elm,
                                  ))
-    return plotly.plot(fig)
+    return fig
 
 
 def execute_terminal_command(command):
