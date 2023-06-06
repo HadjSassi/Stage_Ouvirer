@@ -61,9 +61,11 @@ const delay = millis => new Promise((resolve, reject) => {
     setTimeout(_ => resolve(), millis);
 });
 
-async function dl_one_symbol(exchange, timeframe, limit, current_symbol) {
+async function dl_one_symbol(exchange, timeframe, limit, current_symbol, start_date, start_hour) {
     return new Promise(resolve => {
-        since_date = current_utc_date() - limit * tf_ms[timeframe]
+        const startDate = new Date(start_date + " " + start_hour + " UTC");
+        const since_date = startDate.getTime();
+        // since_date = current_utc_date() - limit * tf_ms[timeframe]
         exchange.fetchOHLCV(symbol = current_symbol, timeframe = timeframe, since = since_date, limit = limit).then(async result_ohlcv => {
             let file_pair = current_symbol.replace('/', '-');
             let dirpath = './database/quick_analysis/';
@@ -89,7 +91,7 @@ async function dl_one_symbol(exchange, timeframe, limit, current_symbol) {
     });
 }
 
-async function get_all_coin(exchange, timeframe, limit) {
+async function get_all_coin(exchange, timeframe, limit, start_date, start_hour) {
     let markets = await exchange.load_markets()
     let symbols = exchange.symbols
     symbols_usdt = symbols.filter(symbol => symbol.substr(-4) == "USDT");
@@ -101,7 +103,7 @@ async function get_all_coin(exchange, timeframe, limit) {
         // let total_request = 1
     let current_request = 0
     for (symbol in symbols_usdt) {
-        dl_one_symbol(exchange, timeframe, limit, symbols_usdt[symbol]).then(resp => {
+        dl_one_symbol(exchange, timeframe, limit, symbols_usdt[symbol], start_date, start_hour).then(resp => {
             current_request++
             // console.log(current_request)
             process.stdout.write(`\rLoading ${current_request}/${total_request} coins downloaded`);
@@ -111,8 +113,9 @@ async function get_all_coin(exchange, timeframe, limit) {
         })
     }
 }
-
-
+const args = process.argv.slice(2);
+const start_date = args[0];
+const start_hour = args[1];
 delete_directory()
 let exchange = new ccxt.binance({ enableRateLimit: true })
-get_all_coin(exchange, "1h", 1000)
+get_all_coin(exchange, "1h", 1000, start_date, start_hour)

@@ -232,6 +232,29 @@ def execute_terminal_command(command):
         print(f"Error executing command: {e}")
 
 
+def execute_terminal_command2(command, start_date, start_hour):
+    try:
+        # Modify the command to include the start date and hour
+        command = f'{command} "{start_date}" "{start_hour}"'
+        print (command)
+        # Run the command in the shell, capture the output and text mode for string output
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+
+        # Print the standard output of the command
+        print(result.stdout)
+
+        # If you want to capture the standard error as well, uncomment the line below
+        # print(result.stderr)
+
+        # Check the return code
+        if result.returncode == 0:
+            print("Command executed successfully.")
+        else:
+            print(f"Command execution failed with return code: {result.returncode}")
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing command: {e}")
+
+
 def install_package_if_needed(package):
     try:
         # Check if the package is installed
