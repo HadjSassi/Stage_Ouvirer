@@ -20,6 +20,10 @@ from binance.client import Client
 import plotly
 import plotly.graph_objects as go
 import plotly.io as pio
+import itertools
+import csv
+import threading
+
 
 
 lowerCase = string.ascii_lowercase
@@ -237,12 +241,13 @@ def execute_terminal_command2(command, start_date, start_hour):
         # Modify the command to include the start date and hour
         command = f'{command} "{start_date}" "{start_hour}"'
         print (command)
+        print("Downloading Started, Please wait!")
         # Run the command in the shell, capture the output and text mode for string output
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
         # Print the standard output of the command
-        print(result.stdout)
-
+        # print(result.stdout)
+        print("Donwloading Finished")
         # If you want to capture the standard error as well, uncomment the line below
         # print(result.stderr)
 
