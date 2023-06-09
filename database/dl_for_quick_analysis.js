@@ -69,7 +69,7 @@ async function dl_one_symbol(exchange, timeframe1, limit1, current_symbol, start
         exchange.fetchOHLCV(symbol = current_symbol, timeframe = timeframe1, since = since_date, limit = limit1).then(async result_ohlcv => {
             let file_pair = current_symbol.replace('/', '-');
             let dirpath = './database/quick_analysis/';
-            let filepath = dirpath +file_pair+"$" +startDate+start_hour+ ".csv";
+            let filepath = dirpath +file_pair+"$"+start_date+".csv";
 
             await fs.promises.mkdir(dirpath, { recursive: true });
 

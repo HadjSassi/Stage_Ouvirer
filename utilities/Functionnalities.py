@@ -24,6 +24,7 @@ import plotly.io as pio
 import itertools
 import csv
 import threading
+import traceback
 
 
 
@@ -92,32 +93,32 @@ def variationN(cryptos, ni):
     ni = ni.upper()
     if (ni == 'N'):
         for crypto in cryptos:
-            cryptos[crypto]["Variation_" + crypto[:-5]] = cryptos[crypto][crypto[:-5] + "_close"] / cryptos[crypto][
-                crypto[:-5] + "_open"]
-            cryptos[crypto]["Variation_N_" + crypto[:-5]] = cryptos[crypto][crypto[:-5] + "_close"] / cryptos[crypto][
-                crypto[:-5] + "_open"]
+            cryptos[crypto]["Variation_" + crypto.lower()] = cryptos[crypto][crypto.lower() + "_close"] / cryptos[crypto][
+                crypto.lower() + "_open"]
+            cryptos[crypto]["Variation_N_" + crypto.lower()] = cryptos[crypto][crypto.lower() + "_close"] / cryptos[crypto][
+                crypto.lower() + "_open"]
     elif (ni == 'N-1'):
         for crypto in cryptos:
-            cryptos[crypto]["Variation_N_" + crypto[:-5]] = cryptos[crypto][crypto[:-5] + "_close"] / cryptos[crypto][
-                crypto[:-5] + "_open"]
-            cryptos[crypto]["Variation_" + crypto[:-5]] = 0.0
-            cryptos[crypto]["Variation_" + crypto[:-5]][0] = float(cryptos[crypto][crypto[:-5] + "_close"][0]) / float(
-                cryptos[crypto][crypto[:-5] + "_open"][0])
+            cryptos[crypto]["Variation_N_" + crypto.lower()] = cryptos[crypto][crypto.lower() + "_close"] / cryptos[crypto][
+                crypto.lower() + "_open"]
+            cryptos[crypto]["Variation_" + crypto.lower()] = 0.0
+            cryptos[crypto]["Variation_" + crypto.lower()][0] = float(cryptos[crypto][crypto.lower() + "_close"][0]) / float(
+                cryptos[crypto][crypto.lower() + "_open"][0])
             for j in range(1, len(cryptos[crypto])):
-                cryptos[crypto]["Variation_" + crypto[:-5]][j] = cryptos[crypto][crypto[:-5] + "_close"][j] / \
-                                                                 cryptos[crypto][crypto[:-5] + "_open"][j - 1]
+                cryptos[crypto]["Variation_" + crypto.lower()][j] = cryptos[crypto][crypto.lower() + "_close"][j] / \
+                                                                 cryptos[crypto][crypto.lower() + "_open"][j - 1]
     elif (ni == 'N-2'):
         for crypto in cryptos:
-            cryptos[crypto]["Variation_N_" + crypto[:-5]] = cryptos[crypto][crypto[:-5] + "_close"] / cryptos[crypto][
-                crypto[:-5] + "_open"]
-            cryptos[crypto]["Variation_" + crypto[:-5]] = 0.0
-            cryptos[crypto]["Variation_" + crypto[:-5]][0] = float(cryptos[crypto][crypto[:-5] + "_close"][0]) / float(
-                cryptos[crypto][crypto[:-5] + "_open"][0])
-            cryptos[crypto]["Variation_" + crypto[:-5]][1] = float(cryptos[crypto][crypto[:-5] + "_close"][1]) / float(
-                cryptos[crypto][crypto[:-5] + "_open"][0])
+            cryptos[crypto]["Variation_N_" + crypto.lower()] = cryptos[crypto][crypto.lower() + "_close"] / cryptos[crypto][
+                crypto.lower() + "_open"]
+            cryptos[crypto]["Variation_" + crypto.lower()] = 0.0
+            cryptos[crypto]["Variation_" + crypto.lower()][0] = float(cryptos[crypto][crypto.lower() + "_close"][0]) / float(
+                cryptos[crypto][crypto.lower() + "_open"][0])
+            cryptos[crypto]["Variation_" + crypto.lower()][1] = float(cryptos[crypto][crypto.lower() + "_close"][1]) / float(
+                cryptos[crypto][crypto.lower() + "_open"][0])
             for j in range(2, len(cryptos[crypto])):
-                cryptos[crypto]["Variation_" + crypto[:-5]][j] = cryptos[crypto][crypto[:-5] + "_close"][j] / \
-                                                                 cryptos[crypto][crypto[:-5] + "_open"][j - 2]
+                cryptos[crypto]["Variation_" + crypto.lower()][j] = cryptos[crypto][crypto.lower() + "_close"][j] / \
+                                                                 cryptos[crypto][crypto.lower() + "_open"][j - 2]
     return (cryptos)
 
 
@@ -125,12 +126,12 @@ def coeffMulti(cryptos):
     for crypto in cryptos:
         for i in range(len(cryptos[crypto].index)):
             if (i == 0):
-                cryptos[crypto]["Coeff_mult_" + crypto[:-5]] = cryptos[crypto][crypto[:-5] + "_close"][0] / \
-                                                               cryptos[crypto][crypto[:-5] + "_open"][0]
+                cryptos[crypto]["Coeff_mult_" + crypto.lower()] = cryptos[crypto][crypto.lower() + "_close"][0] / \
+                                                               cryptos[crypto][crypto.lower() + "_open"][0]
             else:
-                cryptos[crypto]["Coeff_mult_" + crypto[:-5]][i] = cryptos[crypto]["Variation_N_" + crypto[:-5]][i] * \
-                                                                  cryptos[crypto]["Coeff_mult_" + crypto[:-5]][i - 1]
-                # print(cryptos[crypto]["Variation_N_" + crypto[:-5]][i]," * ",  cryptos[crypto]["Coeff_mult_" + crypto[:-5]][i - 1] ," = ",cryptos[crypto]["Coeff_mult_" + crypto[:-5]][i] )
+                cryptos[crypto]["Coeff_mult_" + crypto.lower()][i] = cryptos[crypto]["Variation_N_" + crypto.lower()][i] * \
+                                                                  cryptos[crypto]["Coeff_mult_" + crypto.lower()][i - 1]
+                # print(cryptos[crypto]["Variation_N_" + crypto.lower()][i]," * ",  cryptos[crypto]["Coeff_mult_" + crypto.lower()][i - 1] ," = ",cryptos[crypto]["Coeff_mult_" + crypto.lower()][i] )
 
     return cryptos
 
@@ -138,10 +139,10 @@ def coeffMulti(cryptos):
 def mergeCryptoTogether(cryptos):
     for i in cryptos:
         cryptos["BOT_MAX"] = cryptos[i].copy()
-        cryptos["BOT_MAX"].rename(columns={"Variation_" + i[:-5]: "Variation_BOTMAX"}, inplace=True)
-        cryptos["BOT_MAX"].rename(columns={i[:-5] + "_close": "Variation2BOTMAX"}, inplace=True)
-        cryptos["BOT_MAX"].rename(columns={"Coeff_mult_" + i[:-5]: "Coeff_mult_BOTMAX"}, inplace=True)
-        cryptos["BOT_MAX"].rename(columns={"Variation_N_" + i[:-5]: "Variation_BOTMAX_N"}, inplace=True)
+        cryptos["BOT_MAX"].rename(columns={"Variation_" + i.lower(): "Variation_BOTMAX"}, inplace=True)
+        cryptos["BOT_MAX"].rename(columns={i.lower() + "_close": "Variation2BOTMAX"}, inplace=True)
+        cryptos["BOT_MAX"].rename(columns={"Coeff_mult_" + i.lower(): "Coeff_mult_BOTMAX"}, inplace=True)
+        cryptos["BOT_MAX"].rename(columns={"Variation_N_" + i.lower(): "Variation_BOTMAX_N"}, inplace=True)
         break
     cryptos = pd.concat(cryptos, axis=1)
     return cryptos
@@ -171,10 +172,10 @@ def botMaxVariation2(cryptos, maxis):
             botNames.append(crypto[0])
     for i in range(len(cryptos)):
         botName = botNames[maxis[i]]
-        cryptos["BOT_MAX"]["Variation_BOTMAX_N"][i] = cryptos[botName]["Variation_N_" + botName[:-5]][i]
+        cryptos["BOT_MAX"]["Variation_BOTMAX_N"][i] = cryptos[botName]["Variation_N_" + botName.lower()][i]
     for i in range(0, len(cryptos) - 1):
         botName = botNames[maxis[i]]
-        cryptos["BOT_MAX"]["Variation2BOTMAX"][i + 1] = cryptos[botName]["Variation_N_" + botName[:-5]][i + 1]
+        cryptos["BOT_MAX"]["Variation2BOTMAX"][i + 1] = cryptos[botName]["Variation_N_" + botName.lower()][i + 1]
     cryptos["BOT_MAX"]["Variation2BOTMAX"][0] = 0
 
     return cryptos
