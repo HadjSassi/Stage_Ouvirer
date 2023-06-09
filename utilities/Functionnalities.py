@@ -1,6 +1,7 @@
 import sys
 import string
 import re
+import shutil
 from math import *
 from .get_data import get_historical_from_path
 from os import listdir
@@ -246,7 +247,7 @@ def execute_terminal_command2(command, start_date, start_hour):
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
         # Print the standard output of the command
-        # print(result.stdout)
+        print(result.stdout)
         print("Donwloading Finished")
         # If you want to capture the standard error as well, uncomment the line below
         # print(result.stderr)

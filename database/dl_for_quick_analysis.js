@@ -61,15 +61,15 @@ const delay = millis => new Promise((resolve, reject) => {
     setTimeout(_ => resolve(), millis);
 });
 
-async function dl_one_symbol(exchange, timeframe, limit, current_symbol, start_date, start_hour) {
+async function dl_one_symbol(exchange, timeframe1, limit1, current_symbol, start_date, start_hour) {
     return new Promise(resolve => {
         const startDate = new Date(start_date + " " + start_hour + " UTC");
         const since_date = startDate.getTime();
         // since_date = current_utc_date() - limit * tf_ms[timeframe]
-        exchange.fetchOHLCV(symbol = current_symbol, timeframe = timeframe, since = since_date, limit = limit).then(async result_ohlcv => {
+        exchange.fetchOHLCV(symbol = current_symbol, timeframe = timeframe1, since = since_date, limit = limit1).then(async result_ohlcv => {
             let file_pair = current_symbol.replace('/', '-');
             let dirpath = './database/quick_analysis/';
-            let filepath = dirpath + file_pair + ".csv";
+            let filepath = dirpath +file_pair+"$" +startDate+start_hour+ ".csv";
 
             await fs.promises.mkdir(dirpath, { recursive: true });
 
@@ -116,6 +116,6 @@ async function get_all_coin(exchange, timeframe, limit, start_date, start_hour) 
 const args = process.argv.slice(2);
 const start_date = args[0];
 const start_hour = args[1];
-delete_directory()
+// delete_directory()
 let exchange = new ccxt.binance({ enableRateLimit: true })
 get_all_coin(exchange, "1h", 1000, start_date, start_hour)
