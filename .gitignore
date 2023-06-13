@@ -9,3 +9,4 @@ venv
 .ipynb_checkpoints
 .idea
 help.py
+output
